@@ -1,0 +1,77 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Auction | {% block title %}Welcome Page{% endblock title %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <!-- <link href="static/css/styles.css" rel="stylesheet" /> -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/styles-custom.css' %}" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/cover/">
+    <link rel="stylesheet" href="{% static 'css/cover.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+
+<body class="text-center bg-info">
+
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <h3 class="masthead-brand"></h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link active" href="#"></a>
+                    <a class="nav-link" href="#"></a>
+                    <a class="nav-link" href="#"></a>
+                </nav>
+            </div>
+        </header>
+
+        <main role="main" class="inner cover">
+            <h1 class="cover-heading">ONLINE AUCTIONING SYSTEM</h1>
+            <p class="lead">"Discover unique treasures and unleash bidding excitement on our online auction platform. Elevate your shopping with a curated collection of items. Bid confidently in a secure environment, whether seeking bargains or luxuries. Join the auction frenzy, where winning is just a bid away. Your adventure begins here."</p>
+            <p class="lead">
+                <a href="{% url 'register' %}" class="btn btn-sm btn-secondary">Register</a>
+                <a href="{% url 'login' %}" class="btn btn-sm btn-secondary">Login</a>
+            </p>
+        </main>
+
+        <footer class="mastfoot mt-auto">
+            <div class="inner">
+                <p>Cover template for <a href="https://getbootstrap.com/">Cyber</a>, by <a
+                        href="https://twitter.com/mdo"></a>.</p>
+            </div>
+        </footer>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{% static 'assets/demo/chart-area-demo.js' %}"></script>
+    <script src="{% static 'assets/demo/chart-bar-demo.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'js/datatables-simple-demo.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>

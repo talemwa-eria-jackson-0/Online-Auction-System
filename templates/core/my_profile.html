@@ -7,13 +7,36 @@
 <div class="container-fluid p-4">
     <div class="card">
         <div class="card-header">
-            <h5 style="color: gray;" class="fw-bold">MY PROFILE</h5>
+            <h5 style="color: gray;" class="fw-bold">EDIT PROFILE</h5>
         </div>
 
         <div class="card-body">
-            
+
+            <form>
+                <div class="form-group mb-3">
+                    <label for="fullname" class="mb-1">Full Name:</label>
+                    <input type="text" class="form-control" id="fullname" aria-describedby=""
+                        value="Talemwa Eria Jackson">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password" class="mb-1">Password</label>
+                    <input type="password" class="form-control" id="password" value="123456">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="town" class="mb-1">Home Town:</label>
+                    <input type="text" class="form-control" id="town" aria-describedby=""
+                        value="Arua">
+                </div>
+                <button type="submit" style="color: gray;" class="btn fw-semibold btn-info"><i class="fas fa-edit"></i> Update Profile</button>
+            </form>
+
         </div>
     </div>
+
+
+
 </div>
+
+
 
 {% endblock body %}

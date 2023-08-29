@@ -2,6 +2,10 @@ from django.shortcuts import render
 
 # Create your views here.
 
+def home(request):
+    return render(request, "core/home.html")
+
+
 def dashboard(request):
     return render(request, "core/index.html")
 
@@ -28,3 +32,11 @@ def reset_password(request):
 
 def my_profile(request):
     return render(request, "core/my_profile.html")
+
+
+def register(request):
+    return render(request, "core/register.html")
+
+
+def login(request):
+    return render(request, "core/login.html")

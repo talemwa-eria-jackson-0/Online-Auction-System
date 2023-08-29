@@ -6,17 +6,52 @@
 
 <div class="container-fluid p-4">
 
-    <div class="row mb-3">
-        <div class="cols-12 ">
-            <a href="#" class="btn btn-info float-end fw-bold" style="color: gray;">+ Add New Auction</a>
+    <div class="row mb-3 gap-2 gap-md-0">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 style="color: gray;" class="fw-bold">LIST OF MY AUCTIONS</h5>
+                </div>
+            </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="card bg-info mb-3">
+                <div class="card-header">
+                    <h5 style="color: gray;" class="fw-semibold">ADD A NEW PRODUCT</h5>
+                </div>
+            </div>
+            <form>
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="product_name" aria-describedby=""
+                        placeholder="Enter Product Name">
+                </div>
+                <div class="mb-3">
+                    <input type="number" class="form-control" id="product_name" aria-describedby=""
+                        placeholder="Enter Product Minimum Price">
+                </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="product_name" aria-describedby=""
+                        placeholder="Enter Product Description">
+                </div>
+                
+                <div class="mb-3">
+                    <input type="file" class="form-control" id="product_image" name="product_image">
+                    <div id="product_image" class="form-text text-info">Upload pictures for the product</div>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" name="product_description" id="product_description" rows="5"
+                        placeholder="Enter every detail about the product"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-info w-100 fw-semibold" style="color: gray;"><i
+                        class="fa fa-plus-circle" aria-hidden="true"></i> Add Product</button>
+            </form>
+        </div>
+
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h5 style="color: gray;" class="fw-bold">LIST OF MY AUCTIONS</h5>
-        </div>
-    </div>
+
 </div>
 
 {% endblock body %}
