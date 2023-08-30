@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,10 +9,15 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Register - SB Admin</title>
-        <link href="css/styles.css" rel="stylesheet" />
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <style>
+            .bg-darkblue {
+            background: linear-gradient(90deg, rgb(12, 8, 73) 0% 100%);
+        }
+        </style>
     </head>
-    <body class="bg-primary">
+    <body class="bg-darkblue">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
                 <main>
@@ -54,12 +61,12 @@
                                                 </div>
                                             </div>
                                             <div class="mt-4 mb-0">
-                                                <div class="d-grid"><a class="btn btn-primary btn-block" href="login.html">Create Account</a></div>
+                                                <div class="d-grid"><a class="btn bg-darkblue btn-block text-white" href="{% url 'login' %}">Create Account</a></div>
                                             </div>
                                         </form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="login.html">Have an account? Go to login</a></div>
+                                        <div class="small"><a href="{% url 'login' %}">Have an account? Go to login</a></div>
                                     </div>
                                 </div>
                             </div>
@@ -68,14 +75,13 @@
                 </main>
             </div>
             <div id="layoutAuthentication_footer">
-                <footer class="py-4 bg-light mt-auto">
+                <footer class="py-4 bg-darkblue mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div class="text-muted"></div>
                             <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
+                                <a href="#"></a>
+                                <a href="#"></a>
                             </div>
                         </div>
                     </div>
