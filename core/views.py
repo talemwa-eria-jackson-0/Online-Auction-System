@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from . import forms
+from django.contrib import messages
 
 # Create your views here.
 
@@ -35,7 +38,23 @@ def my_profile(request):
 
 
 def register(request):
-    return render(request, "core/register.html")
+    if request.method == "POST":
+        form = forms.RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "You have successfully created your account")
+            # proces data and create user 
+            # redirect to the login page
+            return redirect("login")
+        else:
+            # form = forms.CustomRegistrationForm()
+            messages.error(request, "Error")
+    else:
+        form = forms.RegistrationForm()
+
+    return render(request, "core/register.html", {
+        "form": form,
+    })
 
 
 def login(request):
