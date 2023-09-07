@@ -56,44 +56,47 @@
             color: darkblue;
         }
 
-        /* Default styles for the image */
-        .custom-image {
-            width: 100%;
-            /* Full width by default */
+        /* Default image size for all screens */
+        img {
             max-width: 100%;
-            /* Don't exceed the container's width */
+            /* Ensure the image doesn't exceed its container */
         }
 
-        /* Media query for screens smaller than 576px (extra small devices) */
-        @media (max-width: 575.98px) {
-            .custom-image {
+        /* Small screen size (e.g., mobile devices) */
+        @media (max-width: 767px) {
+            .image-small {
                 width: 100%;
-                /* Adjust as needed */
+                /* Set the width for small screens */
+                height: 200px;
+                /* Maintain aspect ratio */
             }
         }
 
-        /* Media query for screens between 576px and 767.98px (small devices) */
-        @media (min-width: 576px) and (max-width: 767.98px) {
-            .custom-image {
-                /* width: 75%; */
-                /* Adjust as needed */
+        /* Medium screen size (e.g., tablets) */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .image-medium {
+                width: 200px;
+                /* Set the width for medium screens */
+                height: 170px;
+                /* Maintain aspect ratio */
             }
         }
 
-        /* Media query for screens between 768px and 991.98px (medium devices) */
-        @media (min-width: 768px) and (max-width: 991.98px) {
-            .custom-image {
-                width: 50%;
-                /* Adjust as needed */
-            }
-        }
-
-        /* Media query for screens larger than 992px (large devices) */
+        /* Large screen size (e.g., desktops) */
         @media (min-width: 992px) {
-            .custom-image {
-                width: 30%;
-                /* Adjust as needed */
+            .image-large {
+                width: 300px;
+                /* Set the width for large screens */
+                height: 250px;
+                /* Maintain aspect ratio */
             }
+        }
+
+        /* CSS for sticky form container */
+        .sticky-form-container {
+            position: sticky;
+            top: 70px;
+            z-index: 1;
         }
     </style>
 

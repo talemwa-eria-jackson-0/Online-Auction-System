@@ -23,7 +23,7 @@ def dashboard(request):
 @login_required(login_url="login")
 def my_auctions(request):
     user = request.user
-    user_products = models.Product.objects.filter(seller=user)       # getting user products
+    user_products = models.Product.objects.filter(seller=user)  # Getting user products
 
     if request.method == "POST":
         form = forms.ProductForm(request.POST, request.FILES)
@@ -32,9 +32,13 @@ def my_auctions(request):
             product.seller = user
             product.save()
             # Redirect to a success page or refresh the current page
+
+            # After successfully adding the product, you can display a message or redirect.
+            messages.success(request, "Product added successfully.")
+            return redirect("my_auctions")  # Redirect back to the same page
     else:
-        form = forms.ProductForm()      # creating new form for rendering in the template
-        
+        form = forms.ProductForm()  # Creating a new form for rendering in the template
+
     return render(request, "core/my_auctions.html", {
         "form": form,
         "user_products": user_products,
