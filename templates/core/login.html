@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Login - SB Admin</title>
+        <title>Auction | Login</title>
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
@@ -26,29 +26,32 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-3">Login</h3></div>
                                     <div class="card-body">
-                                        <form>
+                                        <form method="POST">
+                                            {% csrf_token %}
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
-                                                <label for="inputEmail">Email address</label>
+                                                <input name="username" class="form-control" id="username" type="text"/>
+                                                <label for="username">Username</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputPassword" type="password" placeholder="Password" />
-                                                <label for="inputPassword">Password</label>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
-                                                <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
+                                                <input name="password" class="form-control" id="Password" type="password" placeholder="Password" />
+                                                <label for="Password">Password</label>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="#">Forgot Password?</a>
-                                                <a class="btn bg-darkblue text-white" href="{% url 'dashboard' %}">Login</a>
+                                                <button type="submit" class="btn w-100 bg-darkblue text-white">Login</button>
                                             </div>
                                         </form>
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="{% url 'register' %}">Need an account? Sign up!</a></div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <a  href="#">Forgot Password?</a>
+                                            </div>
+                                            <div class="col-6">
+                                                <a class="small" href="{% url 'register' %}">Need an account? Sign up!</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

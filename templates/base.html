@@ -124,16 +124,21 @@
                         </a>
 
                         <div class="sb-sidenav-menu-heading">Addons</div>
-                        <a class="nav-link" href="charts.html">
+                        <a class="nav-link" href="{% url 'logout' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             <span class="fw-bold" style="color: whitesmoke;">Logout</span>
                         </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-user text-white">
-                    <div class="small">Logged in as: <span class="fw-bold">Cyber Jackson</span></div>
-                    <div></div>
-                    
+                    <!-- <div class="small">Logged in as: <span class="fw-bold">Cyber Jackson</span></div>
+                    <div></div> -->
+
+                    {% if request.user.is_authenticated %}
+                        <div class="small">Logged in as:</div>
+                        <div class="fw-bold text-center"> {{ request.user }} </div>
+                    {% endif %}
+
                 </div>
             </nav>
         </div>
