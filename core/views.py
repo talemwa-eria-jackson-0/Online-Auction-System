@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+from . import models, forms
+
 # Create your views here.
 
 def home(request):
@@ -17,9 +19,26 @@ def dashboard(request):
     return render(request, "core/index.html")
 
 
+# view for handling form submission for products on my_auctions.html
 @login_required(login_url="login")
 def my_auctions(request):
-    return render(request, "core/my_auctions.html")
+    user = request.user
+    user_products = models.Product.objects.filter(seller=user)       # getting user products
+
+    if request.method == "POST":
+        form = forms.ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.seller = user
+            product.save()
+            # Redirect to a success page or refresh the current page
+    else:
+        form = forms.ProductForm()      # creating new form for rendering in the template
+        
+    return render(request, "core/my_auctions.html", {
+        "form": form,
+        "user_products": user_products,
+    })
 
 
 @login_required(login_url="login")
@@ -45,27 +64,6 @@ def reset_password(request):
 @login_required(login_url="login")
 def my_profile(request):
     return render(request, "core/my_profile.html")
-
-
-# def user_register(request):
-#     if request.method == "POST":
-#         form = forms.RegistrationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, "You have successfully created your account")
-#             # proces data and create user 
-#             # redirect to the login page
-#             return redirect("login")
-#         else:
-#             # form = forms.CustomRegistrationForm()
-#             messages.error(request, "Error")
-#     else:
-#         form = forms.RegistrationForm()
-
-#     return render(request, "core/register.html", {
-#         "form": form,
-#     })
-
 
 def user_login(request):
     if request.method == "POST":
@@ -104,3 +102,5 @@ def user_register(request):
     return render(request, "core/register.html", {
         "form": form,
     })
+
+

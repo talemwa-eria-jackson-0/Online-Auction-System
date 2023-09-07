@@ -1,29 +1,42 @@
 from django.db import models
+from django.contrib.auth.models import User as DjangoUser
+from django.utils import timezone
 
 # Create your models here.
-
-class User(models.Model):
-    user_fullname = models.CharField(max_length=64)
-    user_email = models.EmailField(null=True)
-    user_home_town = models.CharField(max_length=64)
-    user_name = models.CharField(max_length=64)
+class UserProfile(models.Model):
+    user = models.OneToOneField(DjangoUser, on_delete=models.CASCADE)
+    phone_number = models.CharField(max_length=10)
+    address = models.TextField()
 
     def __str__(self):
-        return f"Name: {self.user_fullname}, Home Town: {self.user_home_town}"
+        return f"{self.user.first_name} {self.user.last_name} from {self.address.title} ----> {self.phone_number}"
 
 
+# represents the product being auctioned
 class Product(models.Model):
-    product_name = models.CharField(max_length = 50)
-    slug = models.SlugField()
-    product_price = models.IntegerField()
-    product_desc = models.TextField()
-    product_time_posted = models.DateTimeField(auto_now_add=True)
-    user_email = models.ForeignKey(User, on_delete=models.CASCADE)
-    product_image = models.ImageField(null=True, blank=True)
+    seller = models.ForeignKey(DjangoUser, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=255, default="New Product")
+    description = models.TextField(null=True)
+    start_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    end_time = models.DateTimeField(null=True)
+    image = models.ImageField(upload_to='product_images/', null=True)
 
     def __str__(self):
-        return f"Name: {self.product_name}, Price: {self.product_price}"
-    
+        return f"{self.name} sold  at a starting price of {self.start_price}"
 
+
+class Auction(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    current_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    winner = models.ForeignKey(DjangoUser, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        pass
+
+
+#  stores individual bids made by users on specific auctions
 class Bid(models.Model):
-    pass
+    bidder = models.ForeignKey(DjangoUser, on_delete=models.CASCADE, default="")
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, default="")
+    bid_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)     #manually specifying the bid price
+    bid_time = models.DateTimeField(auto_now_add=True, null=True)

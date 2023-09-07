@@ -12,6 +12,19 @@
                 <div class="card-header bg-darkblue">
                     <h5 style="color: whitesmoke;" class="fw-bold">LIST OF MY AUCTIONS</h5>
                 </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for product in user_products %}
+                            <div class="col-md-4">
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="custom-image rounded">
+                                <h3>{{ product.name }}</h3>
+                                <p>{{ product.description }}</p>
+                            </div>
+                        {% endfor %}
+
+                        <div class="col-md-6 bg-danger"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -21,7 +34,10 @@
                     <h5 style="color: whitesmoke;" class="fw-semibold ">ADD A NEW PRODUCT</h5>
                 </div>
             </div>
-            <form>
+            <form method="post" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
                 <div class="mb-3">
                     <input type="text" class="form-control" id="product_name" aria-describedby=""
                         placeholder="Enter Product Name">
@@ -34,7 +50,6 @@
                     <input type="text" class="form-control" id="product_name" aria-describedby=""
                         placeholder="Enter Product Description">
                 </div>
-                
                 <div class="mb-3">
                     <input type="file" class="form-control" id="product_image" name="product_image">
                     <div id="product_image" class="form-text text-darkblue">Upload pictures for the product</div>

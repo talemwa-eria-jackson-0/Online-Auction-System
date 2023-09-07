@@ -30,8 +30,6 @@
             /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
         }
 
-
-
         /* Style for active link */
         .sb-sidenav-menu .nav-link.active {
             background-color: white;
@@ -42,10 +40,12 @@
         .sidebar-background {
             background: rgb(2, 0, 36);
             background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0% 100%);
+            /* background-color: darkblue; */
         }
 
         .bg-darkblue {
             background: linear-gradient(90deg, rgb(12, 8, 73) 0% 100%);
+            /* background-color: blu; */
         }
 
         .bg-user {
@@ -54,6 +54,46 @@
 
         .text-darkblue {
             color: darkblue;
+        }
+
+        /* Default styles for the image */
+        .custom-image {
+            width: 100%;
+            /* Full width by default */
+            max-width: 100%;
+            /* Don't exceed the container's width */
+        }
+
+        /* Media query for screens smaller than 576px (extra small devices) */
+        @media (max-width: 575.98px) {
+            .custom-image {
+                width: 100%;
+                /* Adjust as needed */
+            }
+        }
+
+        /* Media query for screens between 576px and 767.98px (small devices) */
+        @media (min-width: 576px) and (max-width: 767.98px) {
+            .custom-image {
+                /* width: 75%; */
+                /* Adjust as needed */
+            }
+        }
+
+        /* Media query for screens between 768px and 991.98px (medium devices) */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .custom-image {
+                width: 50%;
+                /* Adjust as needed */
+            }
+        }
+
+        /* Media query for screens larger than 992px (large devices) */
+        @media (min-width: 992px) {
+            .custom-image {
+                width: 30%;
+                /* Adjust as needed */
+            }
         }
     </style>
 
@@ -131,12 +171,8 @@
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-user text-white">
-                    <!-- <div class="small">Logged in as: <span class="fw-bold">Cyber Jackson</span></div>
-                    <div></div> -->
-
                     {% if request.user.is_authenticated %}
-                        <div class="small">Logged in as:</div>
-                        <div class="fw-bold text-center"> {{ request.user }} </div>
+                    <div class="fw-bold ">Current User:: <span class="ms-2">{{ request.user | upper }}</span> </div>
                     {% endif %}
 
                 </div>
