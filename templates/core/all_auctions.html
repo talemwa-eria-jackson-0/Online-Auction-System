@@ -19,27 +19,83 @@
                     <span style="color: whitesmoke;" class="fw-bold">Ongoing Auctions</span>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                        {% if ongoing_auctions %}
+                            {% for product in ongoing_auctions %}
+                            <div class="col-12 col-sm-6 col-md-4">
+                                <div class="card mb-3">
+                                    {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                        class="card-img-top image-small image-medium image-large rounded">
+                                    {% else %}
+                                    <!-- Display a placeholder image or message for products without images -->
+                                    <p>No image available</p>
+                                    {% endif %}
+
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ product.name }}</h5>
+                                        <p class="card-text">Starting Price: ${{ product.start_price }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>Oooops!!! There are currently no ongoing auctions</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card">
+        <div class="col-md-4 sticky-form-container">
+            <div class="card mb-3">
                 <div class="card-header bg-darkblue">
                     <span style="color: whitesmoke;" class="fw-bold">Recently Added Auctions</span>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                        {% for product in recent_products %}
+                        <div class="">
+                            <div class="card-header mb-2">
+                                <div class="row">
+                                    <div class="col-6">{{ product.name }}</div>
+                                    <div class="col-6">${{ product.start_price }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
 
+            <div class="card">
+                <div class="card-header bg-darkblue">
+                    <span style="color: whitesmoke;" class="fw-bold">About Due Auctions</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for product in recent_products %}
+                        <div class="">
+                            <div class="card-header mb-2">
+                                <div class="row">
+                                    <div class="col-6">{{ product.name }}</div>
+                                    <div class="col-6">${{ product.start_price }}</div>
+                                </div>
+                                <div>Due On:: <span>{{ product.end_time }}</span></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-  
+
 </div>
 
 <div class="container-fluid">
-    
+
 </div>
 
 {% endblock body %}

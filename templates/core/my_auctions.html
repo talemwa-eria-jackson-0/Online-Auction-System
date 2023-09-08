@@ -7,21 +7,33 @@
 <div class="container-fluid p-4">
 
     <div class="row mb-3 gap-2 gap-md-0">
-        <div class="col-md-8">
+        <div class="col-md-8"> 
             <div class="card">
                 <div class="card-header bg-darkblue">
                     <h5 style="color: whitesmoke;" class="fw-bold">LIST OF MY AUCTIONS</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        {% for product in user_products %}
-                        <div class="col-6 col-sm-4">
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                                class="image-small image-medium image-large rounded">
-                            <h3>{{ product.name }}</h3>
-                            <p>{{ product.description }}</p>
-                        </div>
-                        {% endfor %}
+                        {% if user_products %}
+                            {% for product in user_products %}
+                            <div class="col-6 col-sm-4">
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                    class="image-small image-medium image-large rounded">
+                                <h3>{{ product.name }}</h3>
+                                <p>{{ product.start_price }}</p>
+                                <div>
+                                    <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </a>
+                                    <a href="{% url 'delete_product' product.id %}" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-center">Oooops!!! You have no ongoing auctions</p>
+                        {% endif %}
 
                         <div class="col-md-6 bg-danger"></div>
                     </div>
@@ -42,29 +54,48 @@
                     {% csrf_token %}
 
                     <div class="mb-3">
-                        <input type="text" class="form-control" id="product_name" aria-describedby=""
-                            placeholder="Enter Product Name">
+                        <label for="name" class="">Product Name:</label><br>
+                        <!-- <input type="text" class="form-control" id="product_name" aria-describedby=""
+                            placeholder="Product Name"> -->
+                            {{ form.name }}
                     </div>
                     <div class="mb-3">
-                        <input type="number" class="form-control" id="product_name" aria-describedby=""
-                            placeholder="Enter Product Minimum Price">
+                        <label for="start_price">Product Starting Price:</label><br>
+                        <!-- <input type="number" class="form-control" id="product_price" aria-describedby=""
+                            placeholder="Auction start price"> -->
+                            {{ form.start_price }}
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" id="product_name" aria-describedby=""
-                            placeholder="Enter Product Description">
+                        <label for="end_time">Auction End Date:</label><br>
+                        <!-- <input type="datetime" class="form-control" id="end_time" aria-describedby=""
+                            placeholder="Auction End Date"> -->
+                            {{ form.end_time }}
                     </div>
                     <div class="mb-3">
-                        <input type="file" class="form-control" id="product_image" name="product_image">
+                        <label for="description">Product Image:</label><br>
+                        <!-- <input type="file" class="form-control" id="product_image" name="product_image"> -->
+                        {{ form.image }}
                         <div id="product_image" class="form-text text-darkblue">Upload pictures for the product</div>
                     </div>
                     <div class="mb-3">
-                        <textarea class="form-control" name="product_description" id="product_description" rows="5"
-                            placeholder="Enter every detail about the product"></textarea>
+                        <label for="name">Product Description:</label><br>
+                        <!-- <textarea class="form-control" name="product_description" id="product_description" rows="5"
+                            placeholder="Enter every detail about the product"></textarea> -->
+                            {{ form.description }}
                     </div>
 
                     <button type="submit" class="btn bg-darkblue w-100 fw-semibold" style="color: whitesmoke;"><i
                             class="fa fa-plus-circle" aria-hidden="true"></i> Add Product</button>
                 </form>
+<!--             
+                <form method="post" enctype="multipart/form-data" action="">
+                    {% csrf_token %}
+                    {{ form.as_p }}  {# Render all form fields as paragraphs #}
+                
+                    <button type="submit" class="btn bg-darkblue w-100 fw-semibold"
+                        style="color: whitesmoke;"><i class="fa fa-plus-circle"
+                            aria-hidden="true"></i> Add Product</button>
+                </form> -->
             </div>
         </div>
 

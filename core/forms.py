@@ -3,6 +3,8 @@ from django.forms import ModelForm, ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from . import models
+# from datetimewidget.widgets import DateTimeWidget
+# from django.forms import DateTimeInput
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -42,4 +44,36 @@ class CustomUserCreationForm(UserCreationForm):
 class ProductForm(ModelForm):
     class Meta:
         model = models.Product
-        fields = ["name", "description", "start_price", "end_time", "image"]
+        fields = ['name', 'description', 'start_price', 'end_time', 'image']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update({
+            "class":"form-control",
+            "id": "name",
+        })
+
+        self.fields["start_price"].widget.attrs.update({
+            "class":"form-control",
+            "id": "start_price"
+        })
+
+        self.fields["end_time"].widget.attrs.update({
+            "class":"form-control",
+            "id": "end_time"
+        })
+
+        self.fields["image"].widget.attrs.update({
+            "class":"form-control",
+            "id": "image"
+        })
+
+        self.fields["description"].widget.attrs.update({
+            "class":"form-control",
+            "id": "description"
+        })
+
+    # Specify the widget for the 'end_time' field
+    # widgets = {
+    #     'end_time': DateTimeWidget(attrs={'id': 'id_end_time'}, usel10n=True, bootstrap_version=3),
+    # }

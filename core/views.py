@@ -7,6 +7,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from . import models, forms
+from django.utils import timezone
+
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -47,7 +50,21 @@ def my_auctions(request):
 
 @login_required(login_url="login")
 def all_auctions(request):
-    return render(request, "core/all_auctions.html")
+    # Retrieve all products from the database
+    all_products = models.Product.objects.all()
+
+    # Retrieve the most recent 5 products from the database
+    recent_products = models.Product.objects.order_by('-id')[:5]
+
+    # Filter products based on end_time (exclude those where end_time has passed)
+    current_time = timezone.now()
+    ongoing_auctions = all_products.filter(end_time__gt=current_time)
+    
+    return render(request, "core/all_auctions.html", {
+        "all_products": all_products,
+        "recent_products": recent_products,
+        "ongoing_auctions": ongoing_auctions,
+    })
 
 
 @login_required(login_url="login")
@@ -108,3 +125,22 @@ def user_register(request):
     })
 
 
+# view for editing product in my_auctions 
+@login_required(login_url="login")
+def edit_product(request, product_id):
+    product = get_object_or_404(models.Product, id=product_id, seller=request.user)
+
+    if request.method == "POST":
+        form = forms.ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Product updated successfully.")
+            return redirect("my_auctions")
+
+    else:
+        form = forms.ProductForm(instance=product)
+
+    return render(request, "core/edit_product.html", {
+        "form": form,
+        "product": product,
+    })
