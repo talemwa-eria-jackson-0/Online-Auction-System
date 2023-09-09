@@ -3,8 +3,6 @@ from django.forms import ModelForm, ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from . import models
-# from datetimewidget.widgets import DateTimeWidget
-# from django.forms import DateTimeInput
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -73,7 +71,16 @@ class ProductForm(ModelForm):
             "id": "description"
         })
 
-    # Specify the widget for the 'end_time' field
-    # widgets = {
-    #     'end_time': DateTimeWidget(attrs={'id': 'id_end_time'}, usel10n=True, bootstrap_version=3),
-    # }
+
+# class BidForm(forms.Form):
+#     bid_amount = forms.DecimalField(
+#         label='Bid Amount',
+#         min_value=0.01,  # Minimum bid amount
+#         required=True,
+#         widget=forms.NumberInput(attrs={'step': '0.01'}),  # Optional: Specify the input step
+#     )
+
+class BidForm(ModelForm):
+    class Meta:
+        model = models.Bid
+        fields = ["bid_price"]

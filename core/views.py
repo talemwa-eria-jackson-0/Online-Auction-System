@@ -11,6 +11,9 @@ from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 
+
+from django.http import JsonResponse
+
 # Create your views here.
 
 def home(request):
@@ -159,3 +162,38 @@ def delete_product(request, product_id):
     return render(request, "core/delete_product.html", {
         "product": product,
     })
+
+
+# view for showing product details
+def product_details(request, product_id):
+    product = get_object_or_404(models.Product, pk=product_id)
+
+    # Try to get the associated Auction object, or create one if it doesn't exist
+    auction, created = models.Auction.objects.get_or_create(product=product)
+
+    if request.method == "POST":
+        bid_form = forms.BidForm(request.POST)
+        if bid_form.is_valid():
+            bid_amount = bid_form.cleaned_data['bid_amount']
+
+            # Ensure the bid is higher than the start price and current price
+            if float(bid_amount) > float(product.start_price) and float(bid_amount) > float(auction.current_price):
+                # Create a Bid model instance
+                bid = models.Bid.objects.create(bidder=request.user, auction=auction, bid_price=bid_amount)
+                
+                # Update the current price in the Auction model
+                auction.current_price = bid_amount
+                auction.save()
+
+                # Return a JSON response indicating success
+                return JsonResponse({'success': True, 'message': 'Bid placed successfully.'})
+            else:
+                # Return a JSON response indicating failure
+                return JsonResponse({'success': False, 'message': 'Bid amount must be higher than start price and current price.'})
+    
+    else:
+        bid_form = forms.BidForm()
+
+    return render(request, "core/product_details.html", {"product": product, "auction": auction, "bid_form": bid_form})
+
+

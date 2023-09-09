@@ -24,7 +24,7 @@
                         {% for product in ongoing_auctions %}
                         <div class="col-12 col-sm-6 col-md-4">
                             <div class="card mb-3">
-                                <a href="">
+                                <a href="{% url 'product_details' product.id %}">
                                     {% if product.image %}
                                     <img src="{{ product.image.url }}" alt="{{ product.name }}"
                                         class="card-img-top image-small image-medium image-large rounded">

@@ -1,11 +1,9 @@
-{% extend "base.html" %}
+{% extends "base.html" %}
 
-{% block title %}Product details {% endblock title %}
+{% block title %}Product Details - {{ product.name }}{% endblock title %}
 
 {% block body %}
-
 <div class="container-fluid p-4">
-
     <div class="row mb-3 gap-2 gap-md-0">
         <div class="col-md-8">
             <div class="card">
@@ -13,15 +11,77 @@
                     <h5 style="color: whitesmoke;" class="fw-bold">BIDDING FOR {{ product.name }}</h5>
                 </div>
                 <div class="card-body">
-                   
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                class="img-fluid rounded">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <h3>{{ product.name }}</h3>
+                            <p>{{ product.description }}</p>
+                            <p>Starting Price: ${{ product.start_price }}</p>
+                            <p>End Time: {{ product.end_time }}</p>
+                            <!-- Add a form for placing bids here -->
+                            <!-- Example: -->
+                            <form method="post" id="bid-form" action="{% url 'product_details' product.id %}">
+                                {% csrf_token %}
+                                <input type="number" name="bid_amount" id="bid-amount" step="0.01" required>
+                                <input type="hidden" name="product_id" id="product-id" value="{{ product.id }}">
+                                <button type="submit">Place Bid</button>
+                            </form>
+                            
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-
+        <div class="col-md-4">
+            <!-- Display user bids for this product here -->
+            <div class="card">
+                <div class="card-header bg-darkblue">
+                    <h5 style="color: whitesmoke;" class="fw-bold">User Bids</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {% for bid in product.bids.all %}
+                        <li>User {{ bid.user.username }} placed a bid of ${{ bid.amount }} at {{ bid.timestamp }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-
-
 </div>
 
-{% block body %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#bid-form").submit(function (e) {
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: "",  // Use the current URL for handling the bid
+                method: "POST",
+                data: formData,
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        // Bid placed successfully, you can update the UI as needed
+                        alert(data.message);
+                        // You may refresh the page or update the UI here
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while processing the bid.");
+                },
+            });
+        });
+    });
+</script>
+
+
+{% endblock body %}
