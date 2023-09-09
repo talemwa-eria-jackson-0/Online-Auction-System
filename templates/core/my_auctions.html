@@ -18,21 +18,26 @@
                         {% for product in user_products %}
                         <div class="col-6 col-sm-4">
                             <div class="card mb-3">
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                                    class="image-small image-medium image-large rounded">
-                                <div class="card-body">
+
+                                <a href="{% url 'product_details' product.id %}">
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                        class="image-small image-medium image-large rounded">
+                                    <div class="card-body">
                                         <div>{{ product.name }}</div>
-                                    <div class="row">
-                                        <div class="col-6">{{ product.start_price }}</div>
-                                        <div class="col-6">
-                                            <a href="" class="float-right">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                            <a href="" class="mx-2">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
+                                        <div class="row">
+                                            <div class="col-6">{{ product.start_price }}</div>
                                         </div>
                                     </div>
+                                </a>
+                                <div class="card-footer mx-auto">
+                                    <a href="" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </a>
+
+                                    <a href="" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+
                                 </div>
                             </div>
 

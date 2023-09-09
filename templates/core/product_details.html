@@ -14,74 +14,79 @@
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                                class="img-fluid rounded">
+                                class="image-small image-medium">
                         </div>
                         <div class="col-12 col-md-6">
                             <h3>{{ product.name }}</h3>
-                            <p>{{ product.description }}</p>
-                            <p>Starting Price: ${{ product.start_price }}</p>
-                            <p>End Time: {{ product.end_time }}</p>
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="text-gray">Starting Price: <span class="fw-bold">${{ product.start_price
+                                            }}</span></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="text-gray">End Time: <span class="fw-bold">${{ product.end_time }}</span>
+                                    </p>
+                                </div>
+                            </div>
                             <!-- Add a form for placing bids here -->
                             <!-- Example: -->
-                            <form method="post" id="bid-form" action="{% url 'product_details' product.id %}">
+                            <form method="post" id="bid-form">
                                 {% csrf_token %}
-                                <input type="number" name="bid_amount" id="bid-amount" step="0.01" required>
+                                <input type="number" class="rounded p-1" id="bid-amount" step="0.01" required>
                                 <input type="hidden" name="product_id" id="product-id" value="{{ product.id }}">
-                                <button type="submit">Place Bid</button>
+                                <button type="submit" class="rounded bg-darkblue text-white">Place Bid</button>
                             </form>
-                            
+
+
                         </div>
+                        <div class="mt-4 fw-bold lead">Product Description</div>
+                        <div>{{ product.description }}</div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-darkblue sticky-form-container">
+                    {% if highest_bid %}
+                    <h5 style="color: whitesmoke;" class="fw-bold ">Current Winner:</h5>
+                    <div class="row text-white">
+                        <div class="col-6 fw-semibold">Name:</div>
+                        <div class="col-6 fw-bolder">{{ highest_bid.bidder|title }}</div>
+                    </div>
+                    <div class="row text-white">
+                        <div class="col-6 fw-semibold">Current Amount:</div>
+                        <div class="col-6 fw-bolder">${{ highest_bid.bid_price }}</div>
+                    </div>
+                    {% else %}
+                    <h5 style="color: whitesmoke;" class="fw-bold ">Current Winner: <span class="fw-normal small">No bids yet</span></h5>
+                    <!-- <p class="text-white">No bids yet</p> -->
+                    {% endif %}
+                </div>
+            </div>
             <!-- Display user bids for this product here -->
             <div class="card">
-                <div class="card-header bg-darkblue">
-                    <h5 style="color: whitesmoke;" class="fw-bold">User Bids</h5>
+                <div class="card-header bg-darkblue sticky-form-container">
+                    <h5 style="color: whitesmoke;" class="fw-bold ">User Bids On This Product</h5>
                 </div>
                 <div class="card-body">
-                    <ul>
-                        {% for bid in product.bids.all %}
-                        <li>User {{ bid.user.username }} placed a bid of ${{ bid.amount }} at {{ bid.timestamp }}</li>
-                        {% endfor %}
-                    </ul>
+                    {% if auction.bid_set.count > 0 %}
+                    {% for bid in auction.bid_set.all %}
+                    <div class="card-header mb-1 small"><span class="fw-semibold">{{ bid.bidder }}</span> bid <span
+                            class="fw-semibold">{{ bid.bid_price }}</span> at <span class="fw-semibold">{{ bid.bid_time
+                            }}</span></div>
+                    {% endfor %}
+                    {% else %}
+                    <hr>
+                    <p class="textcenter">!!!!Ooops product has no bids yet</p>
+                    <hr>
+                    {%endif%}
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#bid-form").submit(function (e) {
-            e.preventDefault();
-
-            var formData = $(this).serialize();
-
-            $.ajax({
-                url: "",  // Use the current URL for handling the bid
-                method: "POST",
-                data: formData,
-                dataType: "json",
-                success: function (data) {
-                    if (data.success) {
-                        // Bid placed successfully, you can update the UI as needed
-                        alert(data.message);
-                        // You may refresh the page or update the UI here
-                    } else {
-                        alert(data.message);
-                    }
-                },
-                error: function () {
-                    alert("An error occurred while processing the bid.");
-                },
-            });
-        });
-    });
-</script>
 
 
 {% endblock body %}

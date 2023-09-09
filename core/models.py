@@ -31,7 +31,7 @@ class Auction(models.Model):
     winner = models.ForeignKey(DjangoUser, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        pass
+        return f"{self.product} => {self.current_price}"
 
 
 #  stores individual bids made by users on specific auctions

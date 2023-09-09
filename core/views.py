@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 
 # Create your views here.
 
@@ -72,7 +72,17 @@ def all_auctions(request):
 
 @login_required(login_url="login")
 def my_applications(request):
-    return render(request, "core/my_applications.html")
+    # Query for all bids made by the current user
+    user_bids = models.Bid.objects.filter(bidder=request.user)
+
+    # Extract the products associated with those bids
+    products_bidded_on = [bid.auction.product for bid in user_bids]
+
+    return render(
+        request,
+        "core/my_applications.html",
+        {"products_bidded_on": products_bidded_on},
+    )
 
 
 @login_required(login_url="login")
@@ -167,33 +177,29 @@ def delete_product(request, product_id):
 # view for showing product details
 def product_details(request, product_id):
     product = get_object_or_404(models.Product, pk=product_id)
-
     # Try to get the associated Auction object, or create one if it doesn't exist
     auction, created = models.Auction.objects.get_or_create(product=product)
 
     if request.method == "POST":
         bid_form = forms.BidForm(request.POST)
         if bid_form.is_valid():
-            bid_amount = bid_form.cleaned_data['bid_amount']
+            bid_amount = bid_form.cleaned_data['bid_price']
+            product_id = bid_form.cleaned_data['product_id'] # Get the product_id from the form data
+            product = get_object_or_404(models.Product, pk=product_id) # Use the product_id to get the product object
 
             # Ensure the bid is higher than the start price and current price
             if float(bid_amount) > float(product.start_price) and float(bid_amount) > float(auction.current_price):
                 # Create a Bid model instance
                 bid = models.Bid.objects.create(bidder=request.user, auction=auction, bid_price=bid_amount)
                 
-                # Update the current price in the Auction model
+            # Update the current price in the Auction model
                 auction.current_price = bid_amount
                 auction.save()
-
-                # Return a JSON response indicating success
-                return JsonResponse({'success': True, 'message': 'Bid placed successfully.'})
-            else:
-                # Return a JSON response indicating failure
-                return JsonResponse({'success': False, 'message': 'Bid amount must be higher than start price and current price.'})
+        else:
+            return HttpResponseBadRequest("Invalid form data")  # Return a 400 Bad Request response for invalid form data
     
-    else:
-        bid_form = forms.BidForm()
+    bid_form = forms.BidForm()  # Create an empty form for GET requests
 
-    return render(request, "core/product_details.html", {"product": product, "auction": auction, "bid_form": bid_form})
+    highest_bid = models.Bid.objects.filter(auction=auction).order_by('-bid_price').first()
 
-
+    return render(request, "core/product_details.html", {"product": product, "auction": auction, "bid_form": bid_form, "highest_bid":highest_bid})

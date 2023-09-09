@@ -1,31 +1,32 @@
-<div class="row">
-    {% if user_products %}
-    {% for product in user_products %}
-    <div class="col-6 col-sm-4">
-        <div class="card mb-3">
-            <img src="{{ product.image.url }}" alt="{{ product.name }}"
-                class="image-small image-medium image-large rounded">
-            <div class="card-body">
-                    <div>{{ product.name }}</div>
-                <div class="row">
-                    <div class="col-6">{{ product.start_price }}</div>
-                    <div class="col-6">
-                        <a href="" class="float-right">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <a href="" class="mx-2">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+def product_details(request, product_id):
+    product = get_object_or_404(models.Product, pk=product_id)
 
-    </div>
-    {% endfor %}
-    {% else %}
-    <p class="text-center">Oooops!!! You have no ongoing auctions</p>
-    {% endif %}
+    # Try to get the associated Auction object, or create one if it doesn't exist
+    auction, created = models.Auction.objects.get_or_create(product=product)
 
-    <div class="col-md-6 bg-danger"></div>
-</div>
+    if request.method == "POST":
+        bid_form = forms.BidForm(request.POST)
+        if bid_form.is_valid():
+            bid_amount = bid_form.cleaned_data['bid_price']
+            product_id = bid_form.cleaned_data['product_id'] # Get the product_id from the form data
+            product = get_object_or_404(models.Product, pk=product_id) # Use the product_id to get the product object
+
+            # Ensure the bid is higher than the start price and current price
+            if float(bid_amount) > float(product.start_price) and float(bid_amount) > float(auction.current_price):
+                # Create a Bid model instance
+                bid = models.Bid.objects.create(bidder=request.user, auction=auction, bid_price=bid_amount)
+                
+                # Update the current price in the Auction model
+                auction.current_price = bid_amount
+                auction.save()
+
+                # Return a JSON response indicating success
+                return JsonResponse({'success': True, 'message': 'Bid placed successfully.'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Bid amount must be higher than start price and current price.'})
+        else:
+            return HttpResponseBadRequest("Invalid form data")  # Return a 400 Bad Request response for invalid form data
+    
+    bid_form = forms.BidForm()  # Create an empty form for GET requests
+
+    return render(request, "core/product_details.html", {"product": product, "auction": auction, "bid_form": bid_form})
