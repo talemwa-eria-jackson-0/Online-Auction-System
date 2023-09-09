@@ -20,8 +20,7 @@
                             <h3>{{ product.name }}</h3>
                             <div class="row">
                                 <div class="col-6">
-                                    <p class="text-gray">Starting Price: <span class="fw-bold">${{ product.start_price
-                                            }}</span></p>
+                                    <p class="text-gray">Starting Price: <span class="fw-bold">${{ product.start_price}}</span></p>
                                 </div>
                                 <div class="col-6">
                                     <p class="text-gray">End Time: <span class="fw-bold">${{ product.end_time }}</span>
@@ -47,9 +46,9 @@
         </div>
         <div class="col-md-4">
             <div class="card mb-3">
-                <div class="card-header bg-darkblue sticky-form-container">
+                <div class="card-header  sticky-form-container" style="background-color: rgb(23, 6, 97);">
                     {% if highest_bid %}
-                    <h5 style="color: whitesmoke;" class="fw-bold ">Current Winner:</h5>
+                    <h5 style="color: whitesmoke;" class="fw-bold ">Currently Leading The Race:</h5>
                     <div class="row text-white">
                         <div class="col-6 fw-semibold">Name:</div>
                         <div class="col-6 fw-bolder">{{ highest_bid.bidder|title }}</div>
@@ -66,15 +65,14 @@
             </div>
             <!-- Display user bids for this product here -->
             <div class="card">
-                <div class="card-header bg-darkblue sticky-form-container">
+                <div class="card-header bg-darkblue">
                     <h5 style="color: whitesmoke;" class="fw-bold ">User Bids On This Product</h5>
                 </div>
                 <div class="card-body">
                     {% if auction.bid_set.count > 0 %}
                     {% for bid in auction.bid_set.all %}
                     <div class="card-header mb-1 small"><span class="fw-semibold">{{ bid.bidder }}</span> bid <span
-                            class="fw-semibold">{{ bid.bid_price }}</span> at <span class="fw-semibold">{{ bid.bid_time
-                            }}</span></div>
+                        class="fw-semibold">{{ bid.bid_price }}</span> at <span class="fw-semibold">{{ bid.bid_time}}</span></div>
                     {% endfor %}
                     {% else %}
                     <hr>
