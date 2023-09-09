@@ -21,9 +21,10 @@
                 <div class="card-body">
                     <div class="row">
                         {% if ongoing_auctions %}
-                            {% for product in ongoing_auctions %}
-                            <div class="col-12 col-sm-6 col-md-4">
-                                <div class="card mb-3">
+                        {% for product in ongoing_auctions %}
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="card mb-3">
+                                <a href="">
                                     {% if product.image %}
                                     <img src="{{ product.image.url }}" alt="{{ product.name }}"
                                         class="card-img-top image-small image-medium image-large rounded">
@@ -36,11 +37,12 @@
                                         <h5 class="card-title">{{ product.name }}</h5>
                                         <p class="card-text">Starting Price: ${{ product.start_price }}</p>
                                     </div>
-                                </div>
+                                </a>
                             </div>
-                            {% endfor %}
+                        </div>
+                        {% endfor %}
                         {% else %}
-                            <p>Oooops!!! There are currently no ongoing auctions</p>
+                        <p>Oooops!!! There are currently no ongoing auctions</p>
                         {% endif %}
                     </div>
                 </div>
@@ -57,10 +59,12 @@
                         {% for product in recent_products %}
                         <div class="">
                             <div class="card-header mb-2">
-                                <div class="row">
-                                    <div class="col-6">{{ product.name }}</div>
-                                    <div class="col-6">${{ product.start_price }}</div>
-                                </div>
+                                <a href="">
+                                    <div class="row">
+                                        <div class="col-6 text-secondary">{{ product.name }}</div>
+                                        <div class="col-6 text-secondary fw-semibold">${{ product.start_price }}</div>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                         {% endfor %}

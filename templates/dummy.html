@@ -1,13 +1,31 @@
 <div class="row">
-    {% if all_products %}
-    {% for product in all_products %}
+    {% if user_products %}
+    {% for product in user_products %}
     <div class="col-6 col-sm-4">
-        <!-- <img src="{{ product.image.url }}" alt="{{ product.name }}"> -->
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.description }}</p>
+        <div class="card mb-3">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                class="image-small image-medium image-large rounded">
+            <div class="card-body">
+                    <div>{{ product.name }}</div>
+                <div class="row">
+                    <div class="col-6">{{ product.start_price }}</div>
+                    <div class="col-6">
+                        <a href="" class="float-right">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="" class="mx-2">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     {% endfor %}
-{% else %}
-    <p class="text-center">Oooops!!! There are currently no available Auctions</p>
-{% endif %}
+    {% else %}
+    <p class="text-center">Oooops!!! You have no ongoing auctions</p>
+    {% endif %}
+
+    <div class="col-md-6 bg-danger"></div>
 </div>

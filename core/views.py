@@ -144,3 +144,18 @@ def edit_product(request, product_id):
         "form": form,
         "product": product,
     })
+
+
+# view for deleting product in my_auctions
+@login_required(login_url="login")
+def delete_product(request, product_id):
+    product = get_object_or_404(models.Product, id=product_id, seller=request.user)
+
+    if request.method == "POST":
+        product.delete()
+        messages.success(request, "Product deleted successfully.")
+        return redirect("my_auctions")
+
+    return render(request, "core/delete_product.html", {
+        "product": product,
+    })
