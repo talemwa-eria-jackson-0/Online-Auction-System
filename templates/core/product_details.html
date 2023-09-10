@@ -29,12 +29,16 @@
                             </div>
                             <!-- Add a form for placing bids here -->
                             <!-- Example: -->
-                            <form method="post" id="bid-form">
+                            <form method="POST">
                                 {% csrf_token %}
-                                <input type="number" class="rounded p-1" id="bid-amount" step="0.01" required>
-                                <input type="hidden" name="product_id" id="product-id" value="{{ product.id }}">
-                                <button type="submit" class="rounded bg-darkblue text-white">Place Bid</button>
+                                <div class="fieldWrapper">
+                                    {{ bid_form.bid_price.errors }}
+                                    <label for="{{ bid_form.bid_price.id_for_label }}">Add Bid:</label><br>
+                                    {{ bid_form.bid_price }}
+                                </div>
+                                <button type="submit" class="btn btn-sm bg-darkblue text-white mt-2">Submit Bid</button>
                             </form>
+                            
 
 
                         </div>
@@ -66,7 +70,7 @@
             <!-- Display user bids for this product here -->
             <div class="card">
                 <div class="card-header bg-darkblue">
-                    <h5 style="color: whitesmoke;" class="fw-bold ">User Bids On This Product</h5>
+                    <h5 style="color: whitesmoke;" class="fw-bold ">User Bids On This Product ({{ auction.bid_set.count }})</h5>
                 </div>
                 <div class="card-body">
                     {% if auction.bid_set.count > 0 %}

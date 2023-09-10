@@ -72,15 +72,13 @@ class ProductForm(ModelForm):
         })
 
 
-# class BidForm(forms.Form):
-#     bid_amount = forms.DecimalField(
-#         label='Bid Amount',
-#         min_value=0.01,  # Minimum bid amount
-#         required=True,
-#         widget=forms.NumberInput(attrs={'step': '0.01'}),  # Optional: Specify the input step
-#     )
-
 class BidForm(ModelForm):
     class Meta:
         model = models.Bid
         fields = ["bid_price"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["bid_price"].widget.attrs.update({
+            "class": "p-1 rounded",
+        })

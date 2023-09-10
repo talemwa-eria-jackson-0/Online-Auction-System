@@ -1,32 +1,123 @@
-def product_details(request, product_id):
-    product = get_object_or_404(models.Product, pk=product_id)
-
-    # Try to get the associated Auction object, or create one if it doesn't exist
-    auction, created = models.Auction.objects.get_or_create(product=product)
+below is the view for my auctions
+# view for handling form submission for products on my_auctions.html
+@login_required(login_url="login")
+def my_auctions(request):
+    user = request.user
+    user_products = models.Product.objects.filter(seller=user)  # Getting user products
 
     if request.method == "POST":
-        bid_form = forms.BidForm(request.POST)
-        if bid_form.is_valid():
-            bid_amount = bid_form.cleaned_data['bid_price']
-            product_id = bid_form.cleaned_data['product_id'] # Get the product_id from the form data
-            product = get_object_or_404(models.Product, pk=product_id) # Use the product_id to get the product object
+        form = forms.ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.seller = user
+            product.save()
+            # Redirect to a success page or refresh the current page
 
-            # Ensure the bid is higher than the start price and current price
-            if float(bid_amount) > float(product.start_price) and float(bid_amount) > float(auction.current_price):
-                # Create a Bid model instance
-                bid = models.Bid.objects.create(bidder=request.user, auction=auction, bid_price=bid_amount)
-                
-                # Update the current price in the Auction model
-                auction.current_price = bid_amount
-                auction.save()
+            # After successfully adding the product, you can display a message or redirect.
+            messages.success(request, "Product added successfully.")
+            return redirect("my_auctions")  # Redirect back to the same page
+    else:
+        form = forms.ProductForm()  # Creating a new form for rendering in the template
 
-                # Return a JSON response indicating success
-                return JsonResponse({'success': True, 'message': 'Bid placed successfully.'})
-            else:
-                return JsonResponse({'success': False, 'message': 'Bid amount must be higher than start price and current price.'})
-        else:
-            return HttpResponseBadRequest("Invalid form data")  # Return a 400 Bad Request response for invalid form data
-    
-    bid_form = forms.BidForm()  # Create an empty form for GET requests
+    return render(request, "core/my_auctions.html", {
+        "form": form,
+        "user_products": user_products,
+    })
 
-    return render(request, "core/product_details.html", {"product": product, "auction": auction, "bid_form": bid_form})
+Below is the modal for Products
+# represents the product being auctioned
+class Product(models.Model):
+    seller = models.ForeignKey(DjangoUser, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=255, default="New Product")
+    description = models.TextField(null=True)
+    start_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    end_time = models.DateTimeField(null=True)
+    image = models.ImageField(upload_to='product_images/', null=True)
+
+    def __str__(self):
+        return f"{self.name} sold  at a starting price of {self.start_price} {self.image}"
+
+Below is a code snippet from my_auctions.html
+ <div class="row">
+                        {% if user_products %}
+                        {% for product in user_products %}
+                        <div class="col-6 col-sm-4">
+                            <div class="card mb-3">
+
+                                <a href="{% url 'product_details' product.id %}">
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                                        class="image-small image-medium image-large rounded">
+                                    <div class="card-body">
+                                        <div>{{ product.name }}</div>
+                                        <div class="row">
+                                            <div class="col-6">{{ product.start_price }}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="card-footer mx-auto">
+                                    <a href="" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-pencil"></i> Edit
+                                    </a>
+
+                                    <a href="" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <p class="text-center">Oooops!!! You have no ongoing auctions</p>
+                        {% endif %}
+                    </div>
+<!-- Add Edit Product Modal -->
+<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" enctype="multipart/form-data" id="editProductForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {{ edit_form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Delete Product Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteProductModalLabel">Delete Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this product?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="#" id="deleteProductBtn" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+I want the edit and delete modals to work 
