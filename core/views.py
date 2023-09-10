@@ -142,6 +142,25 @@ def user_register(request):
 
 
 # view for editing product in my_auctions 
+# @login_required(login_url="login")
+# def edit_product(request, product_id):
+#     product = get_object_or_404(models.Product, id=product_id, seller=request.user)
+
+#     if request.method == "POST":
+#         form = forms.ProductForm(request.POST, request.FILES, instance=product)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "Product updated successfully.")
+#             return redirect("my_auctions")
+
+#     else:
+#         form = forms.ProductForm(instance=product)
+
+#     return render(request, "core/edit_product.html", {
+#         "form": form,
+#         "product": product,
+#     })
+
 @login_required(login_url="login")
 def edit_product(request, product_id):
     product = get_object_or_404(models.Product, id=product_id, seller=request.user)
@@ -152,7 +171,6 @@ def edit_product(request, product_id):
             form.save()
             messages.success(request, "Product updated successfully.")
             return redirect("my_auctions")
-
     else:
         form = forms.ProductForm(instance=product)
 
@@ -163,11 +181,25 @@ def edit_product(request, product_id):
 
 
 # view for deleting product in my_auctions
+# @login_required(login_url="login")
+# def delete_product(request, product_id):
+#     product = get_object_or_404(models.Product, id=product_id, seller=request.user)
+
+#     if request.method == "POST":
+#         product.delete()
+#         messages.success(request, "Product deleted successfully.")
+#         return redirect("my_auctions")
+
+#     return render(request, "core/delete_product.html", {
+#         "product": product,
+#     })
+
 @login_required(login_url="login")
 def delete_product(request, product_id):
     product = get_object_or_404(models.Product, id=product_id, seller=request.user)
-
+    
     if request.method == "POST":
+        # Handle deletion here if needed
         product.delete()
         messages.success(request, "Product deleted successfully.")
         return redirect("my_auctions")
@@ -175,7 +207,6 @@ def delete_product(request, product_id):
     return render(request, "core/delete_product.html", {
         "product": product,
     })
-
 
 # view for showing product details
 # 
