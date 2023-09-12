@@ -21,7 +21,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images/', null=True)
 
     def __str__(self):
-        return f"{self.name} sold  at a starting price of {self.start_price} {self.image}"
+        return f"{self.name}"
 
 
 class Auction(models.Model):

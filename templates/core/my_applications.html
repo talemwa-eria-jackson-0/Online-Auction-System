@@ -42,7 +42,8 @@
                 </div>
                 {% endfor %}
                 {% else %}
-                <p class="text-center">Oooops!!! You have no ongoing auctions</p>
+                <p class="text-center text-gray fw-bold">Oooops!!! You havent made any bids yet</p>
+                <p class="text-center text-gray fw-semibold">Click <span> <a href="{% url 'all_auctions' %}" class="text-primary">here</a> </span> to make bids on the current bids</p>
                 {% endif %}
             </div>
         </div>

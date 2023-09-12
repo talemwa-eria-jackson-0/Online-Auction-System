@@ -20,12 +20,47 @@ def home(request):
     return render(request, "core/home.html")
 
 
-@login_required(login_url="login")
 def dashboard(request):
     all_products = models.Product.objects.all()
+    ongoing_auctions = all_products.filter(end_time__gt=timezone.now())
+
+    bids_data = {}
+    for auction in ongoing_auctions:
+        auction_instance = models.Auction.objects.get(product=auction)
+        bids_count = models.Bid.objects.filter(auction=auction_instance).count()
+        bids_data[auction.product.name] = bids_count
+    
     return render(request, "core/index.html", {
         "all_products": all_products,
+        "ongoing_auctions": ongoing_auctions,
+        "bids_data": bids_data,
     })
+
+
+def product_details(request, product_id):
+    product = get_object_or_404(models.Product, pk=product_id)
+    # Try to get the associated Auction object, or create one if it doesn't exist
+    auction, created = models.Auction.objects.get_or_create(product=product)
+    if request.method == "POST":
+        bid_form = forms.BidForm(request.POST)
+        if bid_form.is_valid():
+            bid_amount = bid_form.cleaned_data['bid_price']
+            # Ensure the bid is higher than the start price and current price
+            if float(bid_amount) > float(product.start_price) and float(bid_amount) > float(auction.current_price):
+                # Create a Bid model instance
+                bid = models.Bid.objects.create(bidder=request.user, auction=auction, bid_price=bid_amount)
+                # Update the current price in the Auction model
+                auction.current_price = bid_amount
+                auction.save()
+                messages.success(request, "Bid submitted successfully.")
+            else:
+                pass
+        else:
+            return HttpResponseBadRequest("Invalid form data")  # Return a 400 Bad Request response for invalid form data
+    bid_form = forms.BidForm()  # Create an empty form for GET requests
+    highest_bid = models.Bid.objects.filter(auction=auction).order_by('-bid_price').first()
+    return render(request, "core/product_details.html", {"product": product, "auction": auction, "bid_form": bid_form, "highest_bid":highest_bid})
+
 
 
 # view for handling form submission for products on my_auctions.html
@@ -100,7 +135,29 @@ def reset_password(request):
 
 @login_required(login_url="login")
 def my_profile(request):
-    return render(request, "core/my_profile.html")
+    user = models.DjangoUser.objects.get(pk=request.user.id)
+    user_profile = models.UserProfile.objects.get(user=user)
+    
+    if request.method == 'POST':
+        user_form = forms.CustomUserChangeForm(request.POST, instance=user)
+        profile_form = forms.UserProfileForm(request.POST, instance=user_profile)
+        
+        try:
+            user_profile = models.UserProfile.objects.get(user=user)
+        except models.UserProfile.DoesNotExist:
+            user_profile = models.UserProfile.objects.create(user=user)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect('my_profile')
+    else:
+        user_form = forms.CustomUserChangeForm(instance=user)
+        profile_form = forms.UserProfileForm(instance=user_profile)
+    
+    return render(request, "core/my_profile.html", {'user_form': user_form, 'profile_form': profile_form})
 
 def user_login(request):
     if request.method == "POST":
@@ -129,37 +186,29 @@ def user_register(request):
 
     if request.method == "POST":
         form = forms.UserCreationForm(request.POST)
+        profile_form = forms.UserProfileForm(request.POST)
         # registering the user to the db 
         if form.is_valid():
             user = form.save()
+
+            # Create UserProfile instance and save it
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+
             # logging in the user automatically 
             login(request, user)
             return redirect("dashboard")
+    else:
+        form = forms.CustomUserCreationForm()
+        profile_form = forms.UserProfileForm()
 
     return render(request, "core/register.html", {
         "form": form,
+        "profile_form": profile_form,
     })
 
 
-# view for editing product in my_auctions 
-# @login_required(login_url="login")
-# def edit_product(request, product_id):
-#     product = get_object_or_404(models.Product, id=product_id, seller=request.user)
-
-#     if request.method == "POST":
-#         form = forms.ProductForm(request.POST, request.FILES, instance=product)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, "Product updated successfully.")
-#             return redirect("my_auctions")
-
-#     else:
-#         form = forms.ProductForm(instance=product)
-
-#     return render(request, "core/edit_product.html", {
-#         "form": form,
-#         "product": product,
-#     })
 
 @login_required(login_url="login")
 def edit_product(request, product_id):
@@ -179,20 +228,6 @@ def edit_product(request, product_id):
         "product": product,
     })
 
-
-# view for deleting product in my_auctions
-# @login_required(login_url="login")
-# def delete_product(request, product_id):
-#     product = get_object_or_404(models.Product, id=product_id, seller=request.user)
-
-#     if request.method == "POST":
-#         product.delete()
-#         messages.success(request, "Product deleted successfully.")
-#         return redirect("my_auctions")
-
-#     return render(request, "core/delete_product.html", {
-#         "product": product,
-#     })
 
 @login_required(login_url="login")
 def delete_product(request, product_id):

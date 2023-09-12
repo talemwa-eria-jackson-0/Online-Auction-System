@@ -6,7 +6,7 @@ The app consists all the user modules like registration, login, reset password a
 
 ## Table of Contents
 
-- [Features](#features)
+- [Features](features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -32,10 +32,7 @@ The app consists all the user modules like registration, login, reset password a
 Before you begin, ensure you have met the following requirements:
 
 - Python 3.7 or higher
-- Flask web framework
-- SQLAlchemy (for database)
-- Flask-Login (for user authentication)
-- Flask-WTF (for forms)
+- Django web framework
 - Other required dependencies (install using `pip` or `requirements.txt`)
 
 ## installation
@@ -45,6 +42,10 @@ Before you begin, ensure you have met the following requirements:
 ## usage
 
 ## development
+
+- Different technologies have been used to come up with this system. These technologies included HTML, vanilla
+  CSS, Bootstrap CSS and Javascript for the frontend.
+- For the Backend, python Django has been used to implement the logic and the databases
 
 ## deployment
 

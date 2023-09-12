@@ -4,11 +4,44 @@
 
 {% block body %}
 <div class="container">
-    <h1>Edit Product</h1>
-    <form method="post" enctype="multipart/form-data">
+    <div class="card mt-4">
+        <div class="card-header bg-darkblue"><h2 class="text-white">Edit {{ product.name }}</h2></div>
+    <!-- <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
+    </form> -->
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+
+            {% csrf_token %}
+    
+            <div class="mb-3">
+                <label for="name" class="fw-semibold">Product Name:</label><br>
+                {{ form.name }}
+            </div>
+            <div class="mb-3">
+                <label for="start_price" class="fw-semibold" >Product Starting Price:</label><br>
+                {{ form.start_price }}
+            </div>
+            <div class="mb-3">
+                <label for="end_time" class="fw-semibold">Auction End Date:</label><br>
+                {{ form.end_time }}
+            </div>
+            <div class="mb-3">
+                <label for="description" class="fw-semibold">Product Image:</label><br>
+                {{ form.image }}
+                <div id="product_image" class="form-text text-darkblue">Upload pictures for the product</div>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="fw-semibold">Product Description:</label><br>
+                {{ form.description }}
+            </div>
+    
+            <button type="submit" class="btn bg-darkblue w-100 fw-semibold" style="color: whitesmoke;"><i
+                    class="fas fa-edit" aria-hidden="true"></i> Save Changes</button>
+        </form>
+    </div>
+    </div>
 </div>
 {% endblock body %}
