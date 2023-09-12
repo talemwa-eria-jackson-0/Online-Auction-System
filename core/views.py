@@ -14,6 +14,8 @@ from django.shortcuts import get_object_or_404
 
 from django.http import JsonResponse, HttpResponseBadRequest
 
+from django.core.exceptions import ObjectDoesNotExist
+
 # Create your views here.
 
 def home(request):
@@ -26,15 +28,28 @@ def dashboard(request):
 
     bids_data = {}
     for auction in ongoing_auctions:
-        auction_instance = models.Auction.objects.get(product=auction)
+        try:
+            auction_instance = models.Auction.objects.get(product=auction)
+        except ObjectDoesNotExist:
+            return redirect("my_auctions")
         bids_count = models.Bid.objects.filter(auction=auction_instance).count()
-        bids_data[auction.product.name] = bids_count
+        bids_data[auction.name] = bids_count
     
+    bids_data_keys = list(bids_data.keys())
+    bids_data_values = list(bids_data.values())
+
+    print(bids_data_keys)
+    print(bids_data_values)
+
     return render(request, "core/index.html", {
         "all_products": all_products,
         "ongoing_auctions": ongoing_auctions,
-        "bids_data": bids_data,
+        "bids_data_keys": bids_data_keys,
+        "bids_data_values": bids_data_values,
     })
+
+
+    
 
 
 def product_details(request, product_id):

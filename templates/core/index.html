@@ -125,10 +125,10 @@
     var myBarChart = new Chart(ctxBar, {
         type: 'bar',
         data: {
-            labels: {{ bids_data.keys|safe }},
+            labels: {{ bids_data_keys|safe }},
             datasets: [{
                 label: '# of Bids',
-                data: {{ bids_data.values|safe }},
+                data: {{ bids_data_values|safe }},
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
@@ -147,10 +147,10 @@
     var myAreaChart = new Chart(ctxArea, {
         type: 'line',
         data: {
-            labels: {{ bids_data.keys|safe }},
+            labels: {{ bids_data_keys|safe }},
             datasets: [{
                 label: '# of Bids',
-                data: {{ bids_data.values|safe }},
+                data: {{ bids_data_values|safe }},
                 fill: true,
                 borderColor: 'rgba(75, 192, 192, 1)'
             }]
@@ -163,5 +163,11 @@
             }
         }
     });
+</script>
+
+<script>
+    console.log({{ bids_data.keys|safe }});
+    console.log({{ bids_data.values|safe }});
+
 </script>
 {% endblock body %}
